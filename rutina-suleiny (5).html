@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rutina de Suleiny</title>
+  <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg2: #111118;
+      --bg3: #1a1a26;
+      --card: #14141e;
+      --border: rgba(255,255,255,0.07);
+      --border2: rgba(255,255,255,0.13);
+      --accent: #c084fc;
+      --accent2: #818cf8;
+      --accent3: #f0abfc;
+      --pink: #fb7185;
+      --teal: #2dd4bf;
+      --gold: #fbbf24;
+      --text: #f1f0f5;
+      --text2: #a09cb8;
+      --text3: #5c5878;
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Background decorative blobs */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(192,132,252,0.12) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -200px; left: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(129,140,248,0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* HEADER */
+    .header {
+      padding: 60px 0 40px;
+    }
+    .plan-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(192,132,252,0.12);
+      border: 1px solid rgba(192,132,252,0.25);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .plan-badge span { font-size: 14px; }
+    h1.plan-title {
+      font-family: 'Clash Display', sans-serif;
+      font-size: clamp(36px, 6vw, 58px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -1px;
+      background: linear-gradient(135deg, #f1f0f5 30%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      border: none;
+      outline: none;
+      cursor: text;
+    }
+    .plan-subtitle {
+      font-size: 15px;
+      color: var(--text2);
+      margin-top: 10px;
+      font-weight: 300;
+      outline: none;
+      cursor: text;
+      border-bottom: 1px solid transparent;
+      display: inline-block;
+      transition: border-color 0.2s;
+    }
+    .plan-subtitle:focus { border-bottom-color: var(--accent); }
+
+    /* PROFILE CHIPS */
+    .profile-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+    .chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--card);
+      border: 1px solid var(--border2);
+      border-radius: 30px;
+      padding: 8px 16px;
+      font-size: 13px;
+      color: var(--text2);
+      transition: border-color 0.2s;
+    }
+    .chip:hover { border-color: rgba(192,132,252,0.3); }
+    .chip b {
+      color: var(--text);
+      font-weight: 500;
+    }
+    .chip input, .chip span[contenteditable] {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-weight: 500;
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      min-width: 10px;
+      max-width: 100px;
+    }
+
+    /* DAYS NAV */
+    .days-nav {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      margin-bottom: 28px;
+      scrollbar-width: none;
+    }
+    .days-nav::-webkit-scrollbar { display: none; }
+    .day-btn {
+      flex-shrink: 0;
+      padding: 10px 20px;
+      border-radius: 30px;
+      border: 1px solid var(--border2);
+      background: var(--card);
+      color: var(--text2);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+      white-space: nowrap;
+    }
+    .day-btn small {
+      display: block;
+      font-size: 10px;
+      font-weight: 300;
+      opacity: 0.65;
+      margin-top: 1px;
+    }
+    .day-btn:hover {
+      border-color: rgba(192,132,252,0.4);
+      color: var(--text);
+    }
+    .day-btn.active {
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      border-color: transparent;
+      color: white;
+      box-shadow: 0 4px 20px rgba(167,85,247,0.35);
+    }
+
+    /* DAY VIEW */
+    .day-view { display: none; }
+    .day-view.active { display: block; }
+
+    .day-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .day-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .day-emoji {
+      width: 48px;
+      height: 48px;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+    .day-type {
+      font-family: 'Clash Display', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .day-count {
+      font-size: 12px;
+      color: var(--text3);
+      margin-top: 2px;
+    }
+
+    /* EXERCISE CARD */
+    .exercise-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 12px;
+      transition: border-color 0.2s;
+      position: relative;
+    }
+    .exercise-card:hover { border-color: var(--border2); }
+
+    .ex-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .ex-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(192,132,252,0.1);
+      border: 1px solid rgba(192,132,252,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .ex-name {
+      flex: 1;
+    }
+    .ex-name input {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text);
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: 'DM Sans', sans-serif;
+      width: 100%;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+      padding-bottom: 2px;
+    }
+    .ex-name input:focus {
+      border-bottom-color: var(--accent);
+    }
+    .delete-ex {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text3);
+      font-size: 18px;
+      padding: 4px;
+      border-radius: 6px;
+      transition: all 0.15s;
+      line-height: 1;
+    }
+    .delete-ex:hover { color: var(--pink); background: rgba(251,113,133,0.1); }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .stat-box {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      text-align: center;
+    }
+    .stat-box label {
+      display: block;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text3);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    .stat-box input {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--accent);
+      background: transparent;
+      border: none;
+      outline: none;
+      text-align: center;
+      width: 100%;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    /* VIDEO SECTION */
+    .video-section { margin-top: 4px; }
+    .video-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .video-input {
+      flex: 1;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 9px 14px;
+      font-size: 12px;
+      color: var(--text2);
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .video-input::placeholder { color: var(--text3); }
+    .video-input:focus { border-color: rgba(192,132,252,0.4); }
+    .video-load-btn, .yt-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 16px;
+      background: rgba(255, 0, 0, 0.1);
+      border: 1px solid rgba(255, 0, 0, 0.25);
+      border-radius: var(--radius-sm);
+      color: #ff4444;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      font-family: 'DM Sans', sans-serif;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .yt-btn:hover {
+      background: rgba(255, 0, 0, 0.2);
+    }
+
+    /* ADD EXERCISE */
+    .add-ex-btn {
+      width: 100%;
+      padding: 14px;
+      background: none;
+      border: 1px dashed rgba(255,255,255,0.1);
+      border-radius: var(--radius);
+      color: var(--text3);
+      font-size: 13px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+      margin-top: 4px;
+    }
+    .add-ex-btn:hover {
+      border-color: rgba(192,132,252,0.3);
+      color: var(--accent);
+      background: rgba(192,132,252,0.04);
+    }
+
+    /* NOTES */
+    .notes-section { margin-top: 24px; }
+    .notes-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text3);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    .notes-area {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      font-size: 14px;
+      color: var(--text2);
+      font-family: 'DM Sans', sans-serif;
+      resize: vertical;
+      min-height: 80px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .notes-area:focus { border-color: rgba(192,132,252,0.3); }
+    .notes-area::placeholder { color: var(--text3); }
+
+    /* RESULTS SECTION */
+    .results-section {
+      margin-top: 60px;
+      border-top: 1px solid var(--border);
+      padding-top: 40px;
+    }
+    .results-title {
+      font-family: 'Clash Display', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .result-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+    }
+    .result-weeks {
+      font-family: 'Clash Display', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .result-desc {
+      font-size: 13px;
+      color: var(--text2);
+      font-weight: 300;
+    }
+
+    /* FOOTER */
+    .footer {
+      margin-top: 60px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text3);
+      padding-bottom: 30px;
+    }
+
+    /* SAVE INDICATOR */
+    .save-indicator {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1a2a1a;
+      border: 1px solid rgba(45,212,191,0.3);
+      color: var(--teal);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 20px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 999;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .reset-btn {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      background: none;
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text3);
+      font-size: 11px;
+      padding: 8px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+      z-index: 999;
+    }
+    .reset-btn:hover { border-color: var(--pink); color: var(--pink); }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 4px; }
+
+    /* ANIMATIONS */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .exercise-card {
+      animation: fadeIn 0.25s ease both;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      .stats-row { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+      .results-grid { grid-template-columns: 1fr; }
+      h1.plan-title { font-size: 36px; }
+      .header { padding: 30px 0 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="saveIndicator" class="save-indicator">✓ Guardado</div>
+  <button class="reset-btn" onclick="resetAll()">↺ Restablecer rutina</button>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="plan-badge"><span>🍑</span> Programa fitness personalizado</div>
+    <h1 id="planTitle" class="plan-title" contenteditable="true" spellcheck="false">Rutina de Suleiny</h1>
+    <p id="planSubtitle" class="plan-subtitle" contenteditable="true" spellcheck="false">Glúteos &amp; tren superior — 5 días por semana</p>
+  </div>
+
+  <!-- PROFILE CHIPS -->
+  <div class="profile-bar">
+    <div class="chip">👤 Edad: <b><input id="pAge" value="23" style="width:30px" /> años</b></div>
+    <div class="chip">📏 Altura: <b><input id="pHeight" value="1.67 m" style="width:46px" /></b></div>
+    <div class="chip">⚡ Nivel: <b><span id="pLevel" contenteditable="true" spellcheck="false">Intermedio</span></b></div>
+    <div class="chip">🎯 Objetivo: <b><span id="pGoal" contenteditable="true" spellcheck="false">Crecer glúteos</span></b></div>
+    <div class="chip">💪 Experiencia: <b><span id="pExp" contenteditable="true" spellcheck="false">~1 año</span></b></div>
+  </div>
+
+  <!-- DAYS NAV -->
+  <div class="days-nav" id="daysNav"></div>
+
+  <!-- DAY VIEWS -->
+  <div id="dayViews"></div>
+
+  <!-- RESULTS -->
+  <div class="results-section">
+    <div class="results-title">¿Cuándo ver resultados?</div>
+    <div class="results-grid">
+      <div class="result-card">
+        <div class="result-weeks">4–6 sem</div>
+        <div class="result-desc">Glúteo más firme y definido</div>
+      </div>
+      <div class="result-card">
+        <div class="result-weeks">8–12 sem</div>
+        <div class="result-desc">Más volumen visible</div>
+      </div>
+      <div class="result-card">
+        <div class="result-weeks">4–6 mes</div>
+        <div class="result-desc">Cambio notable 🍑</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Haz clic en cualquier texto para editar · Pega links de YouTube para ver los videos
+  </div>
+</div>
+
+<script>
+  const DEFAULT_DAYS = [
+    {
+      name: "Lunes", icon: "🍑", type: "Glúteos Pesado", notes: "",
+      exercises: [
+        { name: "Hip Thrust", sets: "4", reps: "6–8", rest: "2 min", video: "https://youtu.be/14wE63cK26I?si=dgxRRGB1pLAu5xnc" },
+        { name: "Peso muerto rumano", sets: "3", reps: "8–10", rest: "90 s", video: "https://youtu.be/x7W2BOKWWKs?si=_okxTPoJ6_ZKsYOG" },
+        { name: "Sentadilla con mancuerna", sets: "3", reps: "10–12", rest: "75–90 s", video: "https://youtube.com/shorts/Ky94GeKMwvs?si=U5AgcDeaxnVcYWcl" },
+        { name: "Aducción", sets: "2", reps: "12–15", rest: "60 s", video: "https://youtube.com/shorts/xlp6FYwBFLU?si=3dZ98v1cYNkeFyGv" },
+        { name: "Patada de glúteo", sets: "3", reps: "12–15/pierna", rest: "45–60 s", video: "https://youtu.be/5jJ3CxVTAas?si=roFhRH9-GztZwJa0" },
+      ]
+    },
+    {
+      name: "Martes", icon: "💪", type: "Tren Superior", notes: "",
+      exercises: [
+        { name: "Jalón al pecho", sets: "3", reps: "10–12", rest: "75–90 s", video: "https://youtube.com/shorts/-MS6Z88wv5I?si=-vBHvvAkUHKk49M5" },
+        { name: "Remo", sets: "3", reps: "10–12", rest: "75–90 s", video: "https://youtube.com/shorts/L0C-_QEM-t8?si=seEmq4KlD3RVu7ip" },
+        { name: "Deltoide posterior", sets: "3", reps: "12–15", rest: "60 s", video: "https://youtube.com/shorts/Ue0xtLb_kvM?si=XUccVmubQABUgPfk" },
+        { name: "Curl bíceps", sets: "2–3", reps: "10–12", rest: "60 s", video: "https://youtube.com/shorts/ll0bUuWH7Ac?si=gu2eAviRdT0wivni" },
+        { name: "Tríceps", sets: "2–3", reps: "10–12", rest: "60 s", video: "https://youtube.com/shorts/5QqwpEYgiqE?si=zt2IeBTjZBRVRUo7" },
+      ]
+    },
+    {
+      name: "Miércoles", icon: "🍑", type: "Glúteo y Femorales", notes: "",
+      exercises: [
+        { name: "Peso muerto", sets: "3", reps: "6–8", rest: "2 min", video: "https://youtube.com/shorts/QjP9g7M_Idg?si=yqewd5F5c1ozboos" },
+        { name: "Curl femoral", sets: "3", reps: "10–12", rest: "75–90 s", video: "https://youtube.com/shorts/VzXQuzPJwHU?si=gg3n0cD2EohgoDjp" },
+        { name: "Hip Thrust unilateral", sets: "3", reps: "10–12/pierna", rest: "75–90 s", video: "https://youtu.be/nPO9Nq_F144?si=q94Lawd8mp2KOmKm" },
+        { name: "Abducción", sets: "3", reps: "15–20", rest: "45–60 s", video: "" },
+        { name: "Aductor", sets: "2", reps: "12–15", rest: "60 s", video: "" },
+      ]
+    },
+    {
+      name: "Jueves", icon: "💪", type: "Tren Superior", notes: "",
+      exercises: [
+        { name: "Press de hombro", sets: "3", reps: "8–10", rest: "90 s", video: "https://youtube.com/shorts/8yY0zXMjBd0?si=CDtp77msFULUuqhk" },
+        { name: "Elevaciones laterales", sets: "3", reps: "12–15", rest: "60 s", video: "https://youtube.com/shorts/dd9xo-_ahCg?si=LSeMpPAeUj8Qoj-k" },
+        { name: "Deltoide posterior", sets: "3", reps: "12–15", rest: "60 s", video: "https://youtube.com/shorts/q0zG8_NvXII?si=i7Hly5FKncuSjBPA" },
+        { name: "Curl bíceps", sets: "2–3", reps: "10–12", rest: "60 s", video: "https://youtube.com/shorts/c3Pl0072T7Q?si=3u9fFcNm44k8Lpk5" },
+        { name: "Tríceps", sets: "2–3", reps: "10–12", rest: "60 s", video: "https://youtube.com/shorts/p_UPS11ZGcA?si=uz3qli1WSxkhg4PT" },
+      ]
+    },
+    {
+      name: "Viernes", icon: "🍑", type: "Glúteo Volumen", notes: "",
+      exercises: [
+        { name: "Patada de glúteo", sets: "3–4", reps: "15–20", rest: "45–60 s", video: "https://youtube.com/shorts/FclsfZvytqM?si=S5j1xUj-ec2QqxL-" },
+        { name: "Abducción", sets: "3–4", reps: "20–25", rest: "45 s", video: "https://youtube.com/shorts/uwKOs7z3O3g?si=cF63ebiJ3Ph7AFMU" },
+        { name: "Step Ups", sets: "3", reps: "12–15/pierna", rest: "75–90 s", video: "https://youtube.com/shorts/r-wWtYEzYIw?si=2KqWeclT6XUkUmC-" },
+        { name: "Extensión de cadera", sets: "3", reps: "15–20", rest: "45–60 s", video: "" },
+      ]
+    }
+  ];
+
+  // ── localStorage helpers ──────────────────────────────────────
+  const STORAGE_KEY = 'suleiny_rutina_v2'; // version bump clears old cache
+
+  function saveAll() {
+    const data = {
+      days,
+      planTitle: document.getElementById('planTitle').innerText,
+      planSubtitle: document.getElementById('planSubtitle').innerText,
+      profile: {
+        age:    document.getElementById('pAge').value,
+        height: document.getElementById('pHeight').value,
+        level:  document.getElementById('pLevel').innerText,
+        goal:   document.getElementById('pGoal').innerText,
+        exp:    document.getElementById('pExp').innerText,
+      }
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    showSaved();
+  }
+
+  function loadSaved() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch(e) { return null; }
+  }
+
+  function showSaved() {
+    const el = document.getElementById('saveIndicator');
+    el.style.opacity = '1';
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.style.opacity = '0', 1800);
+  }
+
+  // ── State ─────────────────────────────────────────────────────
+  const saved = loadSaved();
+
+  // Merge: use saved data but always fill empty videos from DEFAULT_DAYS
+  let days;
+  if (saved) {
+    days = saved.days.map((savedDay, di) => {
+      const def = DEFAULT_DAYS[di];
+      return {
+        ...savedDay,
+        exercises: savedDay.exercises.map((ex, ei) => ({
+          ...ex,
+          video: ex.video || (def && def.exercises[ei] ? def.exercises[ei].video : '')
+        }))
+      };
+    });
+  } else {
+    days = JSON.parse(JSON.stringify(DEFAULT_DAYS));
+  }
+
+  let activeDay = 0;
+
+  // ── Boot: restore static text fields ─────────────────────────
+  window.addEventListener('DOMContentLoaded', () => {
+    if (saved) {
+      document.getElementById('planTitle').innerText    = saved.planTitle    || 'Rutina de Suleiny';
+      document.getElementById('planSubtitle').innerText = saved.planSubtitle || 'Glúteos & tren superior — 5 días por semana';
+      if (saved.profile) {
+        document.getElementById('pAge').value        = saved.profile.age    || '23';
+        document.getElementById('pHeight').value     = saved.profile.height || '1.67 m';
+        document.getElementById('pLevel').innerText  = saved.profile.level  || 'Intermedio';
+        document.getElementById('pGoal').innerText   = saved.profile.goal   || 'Crecer glúteos';
+        document.getElementById('pExp').innerText    = saved.profile.exp    || '~1 año';
+      }
+    }
+
+    // Auto-save on any contenteditable blur or input change
+    document.addEventListener('input',  () => saveAll());
+    document.addEventListener('change', () => saveAll());
+    document.addEventListener('blur',   () => saveAll(), true);
+
+    render();
+  });
+
+  // ── Utils ─────────────────────────────────────────────────────
+  function getYoutubeId(url) {
+    const m = url.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([a-zA-Z0-9_-]{11})/);
+    return m ? m[1] : null;
+  }
+
+  // ── Render ────────────────────────────────────────────────────
+  function render() {
+    renderNav();
+    renderViews();
+  }
+
+  function renderNav() {
+    const nav = document.getElementById('daysNav');
+    nav.innerHTML = '';
+    days.forEach((d, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'day-btn' + (i === activeDay ? ' active' : '');
+      btn.innerHTML = `${d.icon} ${d.name}<small>${d.type}</small>`;
+      btn.onclick = () => { activeDay = i; render(); };
+      nav.appendChild(btn);
+    });
+  }
+
+  function renderViews() {
+    const container = document.getElementById('dayViews');
+    container.innerHTML = '';
+    days.forEach((day, di) => {
+      const div = document.createElement('div');
+      div.className = 'day-view' + (di === activeDay ? ' active' : '');
+
+      let html = `
+        <div class="day-header">
+          <div class="day-header-left">
+            <div class="day-emoji">${day.icon}</div>
+            <div>
+              <div class="day-type" contenteditable="true" spellcheck="false"
+                onblur="days[${di}].type=this.innerText; saveAll();">${day.type}</div>
+              <div class="day-count">${day.exercises.length} ejercicios</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      day.exercises.forEach((ex, ei) => {
+        const vid = ex.video ? getYoutubeId(ex.video) : null;
+        html += `
+          <div class="exercise-card">
+            <div class="ex-top">
+              <div class="ex-icon">${day.icon}</div>
+              <div class="ex-name">
+                <input value="${ex.name.replace(/"/g,'&quot;')}"
+                  onchange="days[${di}].exercises[${ei}].name=this.value; saveAll();"
+                  placeholder="Nombre del ejercicio" />
+              </div>
+              <button class="delete-ex" onclick="deleteEx(${di},${ei})" title="Eliminar">×</button>
+            </div>
+            <div class="stats-row">
+              <div class="stat-box">
+                <label>Series</label>
+                <input value="${ex.sets}" onchange="days[${di}].exercises[${ei}].sets=this.value; saveAll();" />
+              </div>
+              <div class="stat-box">
+                <label>Reps</label>
+                <input value="${ex.reps}" onchange="days[${di}].exercises[${ei}].reps=this.value; saveAll();" />
+              </div>
+              <div class="stat-box">
+                <label>Descanso</label>
+                <input value="${ex.rest}" onchange="days[${di}].exercises[${ei}].rest=this.value; saveAll();" />
+              </div>
+            </div>
+            <div class="video-section">
+              <div class="video-row">
+                <input class="video-input" id="vin-${di}-${ei}" value="${ex.video}"
+                  placeholder="Pega un link de YouTube del ejercicio..."
+                  onchange="days[${di}].exercises[${ei}].video=this.value; saveAll(); render();" />
+                ${ex.video ? `<a class="yt-btn" href="${ex.video}" target="_blank">▶ Ver en YouTube</a>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      html += `<button class="add-ex-btn" onclick="addEx(${di})">+ Agregar ejercicio</button>`;
+
+      html += `
+        <div class="notes-section">
+          <div class="notes-label">Notas del día</div>
+          <textarea class="notes-area"
+            placeholder="Ej: Hip thrust con 80lb, me sentí fuerte hoy, próxima semana subir peso..."
+            onchange="days[${di}].notes=this.value; saveAll();">${day.notes}</textarea>
+        </div>
+      `;
+
+      div.innerHTML = html;
+      container.appendChild(div);
+    });
+  }
+
+  // ── Actions ───────────────────────────────────────────────────
+  function loadVideo(di, ei) {
+    const inp = document.getElementById(`vin-${di}-${ei}`);
+    days[di].exercises[ei].video = inp.value.trim();
+    saveAll();
+    render();
+  }
+
+  function clearVideo(di, ei) {
+    days[di].exercises[ei].video = '';
+    saveAll();
+    render();
+  }
+
+  function deleteEx(di, ei) {
+    if (!confirm('¿Eliminar este ejercicio?')) return;
+    days[di].exercises.splice(ei, 1);
+    saveAll();
+    render();
+  }
+
+  function addEx(di) {
+    days[di].exercises.push({ name: "Nuevo ejercicio", sets: "3", reps: "10–12", rest: "60 s", video: "" });
+    saveAll();
+    render();
+  }
+
+  function resetAll() {
+    if (!confirm('¿Borrar todos los cambios y volver a la rutina original?')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    days = JSON.parse(JSON.stringify(DEFAULT_DAYS));
+    document.getElementById('planTitle').innerText    = 'Rutina de Suleiny';
+    document.getElementById('planSubtitle').innerText = 'Glúteos & tren superior — 5 días por semana';
+    document.getElementById('pAge').value        = '23';
+    document.getElementById('pHeight').value     = '1.67 m';
+    document.getElementById('pLevel').innerText  = 'Intermedio';
+    document.getElementById('pGoal').innerText   = 'Crecer glúteos';
+    document.getElementById('pExp').innerText    = '~1 año';
+    render();
+  }
+</script>
+</body>
+</html>
